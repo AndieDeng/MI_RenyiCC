@@ -6,7 +6,7 @@ import matplotlib.pylab as MP
 from sklearn import datasets
 from sklearn.utils.testing import assert_array_equal
 from sklearn.feature_selection import (chi2, f_classif, f_regression,GenericUnivariateSelect)
-from sklearn.feature_selection.MI_RenyiCC import (_MI_Filter,univariate_f_MI,univariate_forward_f_MI,\
+from MI_RenyiCC_Parzen import (_MI_Filter,univariate_f_MI,univariate_forward_f_MI,\
                                                   multivariate_backward_f_MI,multivariate_forward_f_MI, MI_RenyiCC_Multi)
 
 def test_equal_dependency_bivariate_data():
@@ -52,6 +52,16 @@ def rotate(phi, x):
     z = [[cos(phi), sin(phi)], [-sin(phi), cos(phi)]]
     return inner(x, z)
 
+def compute_normMI(x, type):
+    '''Compute normalize MI'''
+    mi = MI_RenyiCC_Multi(x, type=type)
+    mixx = MI_RenyiCC_Multi(x[:, [0]], x[:, 0], type=type)
+    miyy = MI_RenyiCC_Multi(x[:, [1]], x[:, 1], type=type)
+    if (0.5 * (miyy + mixx)) == 0.0: mi = 0.0
+    mi = mi / (0.5 * (miyy + mixx))
+    return mi
+  
+  
 def test_correlation_examples(N=500):
     '''
     Python code of correlation examples from beaucronin : https://gist.github.com/beaucronin/2509755
@@ -79,6 +89,7 @@ def test_correlation_examples(N=500):
     for corr in [1., .8, .4, 0., -.4, -.8, -1.]:
         x = rmvn([0., 0.], [[1., corr], [corr, 1.]], N)
         mi = MI_RenyiCC_Multi(x, type="c")
+        mi = compute_normMI(x, type="c")
         print("MI score of two continuous linear correlated (correlation degree of %f) gaussian variables : %f" % (corr, mi))
         MI_scores.append(mi)
         datasets.append(x)
@@ -87,6 +98,7 @@ def test_correlation_examples(N=500):
         x = rmvn([0., 0.], [[1., 1.], [1., 1.]], N)
         x = rotate(phi, x)
         mi = MI_RenyiCC_Multi(x, type="c")
+        mi = compute_normMI(x, type="c")
         print("MI score of two continuous linear correlated (correlation slope of %f) gaussian variables : %f" % (phi, mi))
         MI_scores.append(mi)
         datasets.append(x)
@@ -95,24 +107,28 @@ def test_correlation_examples(N=500):
     x = array([(x0, 4. * pow(x0 * x0 - .5, 2.) + runif(-1./3., 1./3., 1))
         for x0 in a])
     mi = MI_RenyiCC_Multi(x, type="c")
+    mi = compute_normMI(x, type="c")
     print("MI score of two continuous non-linear correlated (y=4*(x0^2-0.5)^2+c) variables : %f" %  mi)
     MI_scores.append(mi)
     datasets.append(x)
 
     x = rotate(-pi/8., array([(x0, runif(-1., 1.)) for x0 in a]))
     mi = MI_RenyiCC_Multi(x, type="c")
+    mi = compute_normMI(x, type="c")
     print("MI score of two continuous non-linear correlated variables : %f" %  mi)
     MI_scores.append(mi)
     datasets.append(x)
 
     x = rotate(-pi/8, x)
     mi = MI_RenyiCC_Multi(x, type="c")
+    mi = compute_normMI(x, type="c")
     print("MI score of two continuous non-linear correlated variables : %f" %  mi)
     MI_scores.append(mi)
     datasets.append(x)
 
     x = array([(x0, x0 * x0 + runif(-.5, .5)) for x0 in a])
     mi = MI_RenyiCC_Multi(x, type="c")
+    mi = compute_normMI(x, type="c")
     print("MI score of two continuous non-linear correlated variables : %f" %  mi)
     MI_scores.append(mi)
     datasets.append(x)
@@ -121,6 +137,7 @@ def test_correlation_examples(N=500):
     x = array([(x0, (x0 * x0 + runif(0., .5)) * sign)
         for x0, sign in zip(a, signs)])
     mi = MI_RenyiCC_Multi(x, type="c")
+    mi = compute_normMI(x, type="c")
     print("MI score of two continuous non-linear correlated variables : %f" %  mi)
     MI_scores.append(mi)
     datasets.append(x)
@@ -128,6 +145,7 @@ def test_correlation_examples(N=500):
     x = array([(sin(x0 * pi) + rnorm(0., .125), cos(x0 * pi) + rnorm(0., .125))
         for x0 in a])
     mi = MI_RenyiCC_Multi(x, type="c")
+    mi = compute_normMI(x, type="c")
     print("MI score of two continuous non-linear correlated variables : %f" %  mi)
     MI_scores.append(mi)
     datasets.append(x)
@@ -139,6 +157,7 @@ def test_correlation_examples(N=500):
         rmvn([3., -3], [[1., 0.], [0., 1.]], round(N/4))
         ))
     mi = MI_RenyiCC_Multi(x, type="c")
+    mi = compute_normMI(x, type="c")
     print("MI score of two continuous non-linear correlated variables : %f" %  mi)
     MI_scores.append(mi)
     datasets.append(x)
