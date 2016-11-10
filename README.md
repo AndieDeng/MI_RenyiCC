@@ -6,4 +6,3 @@ Below is an example of the MI/correlation scores of x and y for various distribu
         <img width="90%" src="https://github.com/cdamon/MI_RenyiCC/blob/master/MICorr_ex.png" alt="About screen" title="An example of the correlation of x and y for various distributions of (x,y) pairs"</img>
 </div>
 
-Below is an example of the MI/correlation scores of x and y for various distributions of (x,y) pairs
