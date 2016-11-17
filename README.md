@@ -2,8 +2,8 @@
 If you use my Code in a scientific publication, I would appreciate citations to the following github repository:
 @misc{Damon2016,
   author = {Damon, C.},
-  title = {Project Title},
-  year = {2013},
+  title = {Project MI Renyi CC Title},
+  year = {2016},
   publisher = {GitHub},
   journal = {GitHub repository},
   howpublished = {\url{https://github.com/cdamon/MI_RenyiCC/}}
