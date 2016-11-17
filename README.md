@@ -1,5 +1,5 @@
 # MI_RenyiCC
-If you use my Code in a scientific publication, I would appreciate citations to the following github repository:
+If you use my Code in a scientific publication, I would appreciate citation to the following github repository:
 @misc{Damon2016,
   author = {Damon, C.},
   title = {Project MI Renyi CC Title},
